@@ -332,23 +332,26 @@ const MapView = ({ nonprofits = [] }) => {
                                 : hoveredClient.description}
                         </p>
 
-                        {/* Placeholder Stills as requested */}
-                        <div style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}>
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} style={{
-                                    flex: 1,
-                                    height: '60px',
-                                    background: '#eee',
-                                    borderRadius: '16px',
-                                    overflow: 'hidden'
-                                }}>
-                                    <img
-                                        src={`https://picsum.photos/seed/${hoveredClient.id + i}/200/120`}
-                                        alt="Still"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
-                                    />
+                        {/* Video Thumbnail Logic */}
+                        <div style={{ marginBottom: '1rem', borderRadius: '12px', overflow: 'hidden', height: '120px', background: '#000', position: 'relative' }}>
+                            {hoveredClient.videoUrl ? (
+                                <img
+                                    src={hoveredClient.videoUrl.includes('youtube')
+                                        ? `https://img.youtube.com/vi/${hoveredClient.videoUrl.split('v=')[1]?.split('&')[0]}/mqdefault.jpg`
+                                        : hoveredClient.logoUrl // Fallback if not youtube
+                                    }
+                                    alt="Video Preview"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
+                                />
+                            ) : (
+                                <div style={{ width: '100%', height: '100%', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999', fontSize: '0.8rem' }}>
+                                    No Video Available
                                 </div>
-                            ))}
+                            )}
+                            {/* Play Icon Overlay */}
+                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '40px', height: '40px', background: 'rgba(0,0,0,0.6)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{ width: '0', height: '0', borderLeft: '12px solid white', borderTop: '8px solid transparent', borderBottom: '8px solid transparent', marginLeft: '4px' }} />
+                            </div>
                         </div>
 
                         <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
