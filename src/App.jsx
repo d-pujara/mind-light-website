@@ -43,8 +43,8 @@ function AppContent() {
     const loadClients = async () => {
       console.log("Fetching Google Sheet data...");
       try {
-        // 1. Fetch from Google Sheet
-        const fetchedClients = await fetchClientsFromSheet(SHEET_CSV_URL);
+        // 1. Fetch from Google Sheet with Cache Busting
+        const fetchedClients = await fetchClientsFromSheet(`${SHEET_CSV_URL}&t=${Date.now()}`);
 
         // 2. Merge with Local Overrides/Additions
         // This allows us to "Add" clients locally via the Agent before pushing to the sheet
