@@ -119,7 +119,7 @@ const MapView = ({ nonprofits = [] }) => {
     const [selectedClient, setSelectedClient] = useState(null);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [zoom, setZoom] = useState(11);
-    const [selectedCategory, setSelectedCategory] = useState("All"); // Filter state
+    const [selectedCategories, setSelectedCategories] = useState(["All"]); // Multi-select state
 
     const hoverTimeoutRef = React.useRef(null);
     const mapRef = React.useRef(null);
@@ -182,12 +182,34 @@ const MapView = ({ nonprofits = [] }) => {
     const cardScale = Math.min(1.2, 1 + (zoom - 11) * 0.1);
 
     // Filter Logic
-    const filteredNonprofits = selectedCategory === "All"
+    const filteredNonprofits = selectedCategories.includes("All")
         ? nonprofits
-        : nonprofits.filter(np => np.category === selectedCategory);
+        : nonprofits.filter(np => selectedCategories.includes(np.category));
 
     // Get Unique Categories including 'All'
     const categories = ["All", ...new Set(nonprofits.map(np => np.category))];
+
+    // Toggle Category Logic
+    const toggleCategory = (category) => {
+        if (category === "All") {
+            setSelectedCategories(["All"]);
+            return;
+        }
+
+        let newCategories = selectedCategories.includes("All") ? [] : [...selectedCategories];
+
+        if (newCategories.includes(category)) {
+            newCategories = newCategories.filter(c => c !== category);
+        } else {
+            newCategories.push(category);
+        }
+
+        if (newCategories.length === 0) {
+            setSelectedCategories(["All"]);
+        } else {
+            setSelectedCategories(newCategories);
+        }
+    };
 
     return (
         <div className="map-container" style={{ width: '100%', height: '100vh', position: 'relative' }}>
@@ -444,18 +466,21 @@ const MapView = ({ nonprofits = [] }) => {
 
             {/* Category Color Key (Legend) */}
             <div className="map-legend">
-                {Object.entries(CATEGORY_COLORS).filter(([cat]) => cat !== 'default').map(([category, color]) => (
-                    <motion.div
-                        key={category}
-                        onClick={() => setSelectedCategory(category)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`legend-item ${selectedCategory === category ? 'active' : ''}`}
-                        style={{ background: color }}
-                    >
-                        <span>{category}</span>
-                    </motion.div>
-                ))}
+                {Object.entries(CATEGORY_COLORS).filter(([cat]) => cat !== 'default').map(([category, color]) => {
+                    const isActive = selectedCategories.includes(category);
+                    return (
+                        <motion.div
+                            key={category}
+                            onClick={() => toggleCategory(category)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`legend-item ${isActive ? 'active' : ''}`}
+                            style={{ background: color, opacity: isActive ? 1 : 0.6 }}
+                        >
+                            <span>{category}</span>
+                        </motion.div>
+                    );
+                })}
             </div>
 
             <style jsx>{`
@@ -510,9 +535,9 @@ const MapView = ({ nonprofits = [] }) => {
                     border-radius: 50px;
                     pointer-events: auto;
                     min-width: unset; /* Let content define width */
-                    width: 100%; /* Or fit content */
+                    width: auto; /* Allow variable width */
                     cursor: pointer;
-                    opacity: 0.7; /* Slightly more opaque by default */
+                    opacity: 0.6; /* Default specific opacity */
                     border: 2px solid rgba(255,255,255,0.4);
                     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
                     transition: all 0.2s;
