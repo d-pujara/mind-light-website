@@ -1,0 +1,272 @@
+:root {
+  --primary-bg: #4A3734;
+  --primary-text: #F5EFE0;
+  --accent-color: #D4C5A9;
+  --font-main: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--primary-text);
+  text-decoration: none;
+}
+
+/* Intro Animation */
+.intro-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  z-index: 9999;
+  transition: opacity 1.5s ease-out;
+}
+
+.intro-logo {
+  width: 500px;
+  max-width: 80vw;
+  opacity: 0;
+  animation: fadeInOut 2s forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  80% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  background: linear-gradient(to bottom, rgba(74, 55, 52, 0.9), transparent);
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out 2s forwards;
+  /* Starts after intro */
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links li a {
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links li a:hover {
+  color: var(--accent-color);
+}
+
+.agency-icon-small {
+  width: 50px;
+  height: auto;
+}
+
+/* Map View */
+.map-container {
+  width: 100%;
+  height: 100vh;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  /* background-color: var(--primary-bg) !important; */
+  /* Match theme */
+}
+
+/* Customizing Leaflet Popup */
+.leaflet-popup-content-wrapper {
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+}
+
+.leaflet-popup-tip {
+  background-color: var(--primary-bg);
+}
+
+/* Detail Page */
+.detail-container {
+  padding: 6rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.back-btn:hover {
+  border-color: var(--primary-text);
+}
+
+.detail-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.detail-info h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.founding-date {
+  font-size: 1.2rem;
+  color: var(--accent-color);
+  margin-bottom: 2rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.donate-btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--primary-text);
+  color: var(--primary-bg);
+  font-weight: bold;
+  border-radius: 50px;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.donate-btn:hover {
+  transform: translateY(-3px);
+  background-color: var(--accent-color);
+}
+
+.detail-media video {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-content {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Why Video Page */
+.why-video-page {
+  padding-top: 8rem;
+}
+
+/* Accordion Styles */
+.accordion {
+  margin-top: 3rem;
+  border-top: 1px solid rgba(212, 197, 169, 0.3);
+}
+
+.accordion-item {
+  border-bottom: 1px solid rgba(212, 197, 169, 0.3);
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.accordion-header:hover {
+  color: var(--accent-color);
+}
+
+.accordion-header h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.accordion-icon {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--accent-color);
+}
+
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+
+.accordion-body {
+  padding-bottom: 1.5rem;
+  line-height: 1.6;
+  color: rgba(245, 239, 224, 0.9);
+}
+
+.accordion-item.active .accordion-header {
+  color: var(--accent-color);
+}

@@ -1,0 +1,204 @@
+/* Reset by main.css */
+html,
+body,
+#root,
+.App {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Georgia", "Times New Roman", Times, serif;
+    /* Global Serif */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f5f5f5;
+    color: #4E3629;
+    /* Mind Light Brown */
+    line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Georgia", "Times New Roman", Times, serif;
+    color: #4E3629;
+    /* Mind Light Brown */
+}
+
+/* Navbar Styles - Handled by Inline JS in component for dynamic transparency */
+.navbar {
+    pointer-events: none;
+    /* Let clicks pass through container area */
+}
+
+/* Re-enable clicks on links */
+.nav-links {
+    pointer-events: auto;
+}
+
+.nav-links a {
+    /* Base styles if needed, but JS overrides */
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    opacity: 0.7;
+    transform: translateY(-2px);
+}
+
+/* Map Logo Overlay */
+.map-logo-overlay {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+    /* Removed background and padding to fix "blocky" look */
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    display: flex;
+    /* Animation to match Navbar */
+    opacity: 0;
+    animation: fadeIn 2s ease-out 2s forwards;
+}
+
+.map-logo-overlay img {
+    /* Reduced width further and added opacity */
+    width: 250px;
+    /* Enlarged from 100px as requested "too small" */
+    opacity: 0.8;
+    height: auto;
+    display: block;
+    pointer-events: auto;
+    /* Enable clicks on the image/link */
+    cursor: pointer;
+}
+
+/* Reel Widget */
+.reel-widget {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 1000;
+    width: 200px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    /* Animation to match Navbar */
+    opacity: 0;
+    animation: fadeIn 2s ease-out 2s forwards;
+}
+
+/* Map Zoom Controls Animation */
+.leaflet-control-zoom {
+    opacity: 0;
+    animation: fadeIn 2s ease-out 4s forwards;
+}
+
+.reel-widget:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.reel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.reel-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reel-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.reel-overlay span {
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Map Container */
+.map-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+/* Remove old map filters for high fidelity */
+.old-map-tiles .leaflet-tile-pane {
+    filter: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .navbar {
+        padding: 1rem !important;
+        /* Smaller padding */
+    }
+
+    .nav-links {
+        display: none !important;
+        /* Hide desktop links on mobile */
+    }
+
+    /* Navbar styling adjustments later */
+
+    .map-logo-overlay {
+        top: 1rem;
+    }
+
+    .map-logo-overlay img {
+        width: 180px;
+        /* Smaller logo */
+    }
+
+    h1 {
+        font-size: 2rem !important;
+        /* Smaller headings */
+    }
+
+    .reel-widget {
+        /* Targeted via class, but inline styles in component might override. We handle width in JSX, but pos here. */
+        /* Note: Inline styles often win, so we rely on React logic for some properties, but we can try important for layout */
+        bottom: 6rem !important;
+        /* Move up to avoid bottom drawer */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
