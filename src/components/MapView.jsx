@@ -133,13 +133,59 @@ const MapView = ({ nonprofits = [] }) => {
     // Clean Map Style (No Labels)
     const mapStyle = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png";
 
+    // Marker Sizing Logic
     const getMarkerSize = (z) => {
-        const baseSize = 80;
+        // Reduced base size from 80 -> 60 to prevent overlap
+        const baseSize = 60;
         const baseZoom = 11;
-        // Increased growth rate slightly (1.3 -> 1.4) and max size (250 -> 300)
-        // This makes the "bubble increase properly as you get closer"
-        return Math.max(30, Math.min(300, baseSize * Math.pow(1.4, z - baseZoom)));
+        // Adjusted growth slightly
+        return Math.max(25, Math.min(250, baseSize * Math.pow(1.35, z - baseZoom)));
     };
+
+    // Jitter/Dispersion Logic to prevent stacking
+    const dispersedNonprofits = React.useMemo(() => {
+        if (!nonprofits || nonprofits.length === 0) return [];
+
+        const processed = [];
+        const THRESHOLD = 0.003; // ~300 meters
+
+        // Sort by ID to ensure deterministic processing order
+        const sorted = [...nonprofits].sort((a, b) => (a.id || '').localeCompare(b.id || ''));
+
+        sorted.forEach((client) => {
+            if (!client.coordinates || client.coordinates.length !== 2) return;
+
+            let [lat, lng] = client.coordinates;
+
+            // Check against already processed markers
+            let nearbyCount = 0;
+            processed.forEach(p => {
+                const dLat = Math.abs(p.coordinates[0] - lat);
+                const dLng = Math.abs(p.coordinates[1] - lng);
+                if (dLat < THRESHOLD && dLng < THRESHOLD) {
+                    nearbyCount++;
+                }
+            });
+
+            // If neighbors exist, offset this one
+            if (nearbyCount > 0) {
+                // Spiral offset algorithm
+                const angle = nearbyCount * 137.5; // Golden angle to spread evenly
+                const radius = THRESHOLD * Math.sqrt(nearbyCount) * 0.8; // Radius grows with count
+
+                // Convert simple lat/lng offset (approximate)
+                const latOffset = radius * Math.cos(angle * (Math.PI / 180));
+                const lngOffset = radius * Math.sin(angle * (Math.PI / 180));
+
+                lat += latOffset;
+                lng += lngOffset;
+            }
+
+            processed.push({ ...client, coordinates: [lat, lng] });
+        });
+
+        return processed;
+    }, [nonprofits]);
 
     const handleMarkerVerify = (np, e) => {
         if (!isMobile) {
@@ -210,6 +256,14 @@ const MapView = ({ nonprofits = [] }) => {
             setSelectedCategories(newCategories);
         }
     };
+
+    // Filter Logic (Applied AFTER dispersion to keep positions stable)
+    const filteredNonprofits = selectedCategories.includes("All")
+        ? dispersedNonprofits
+        : dispersedNonprofits.filter(np => selectedCategories.includes(np.category));
+
+    // Get Unique Categories including 'All'
+    const categories = ["All", ...new Set(nonprofits.map(np => np.category))];
 
     return (
         <div className="map-container" style={{ width: '100%', height: '100vh', position: 'relative' }}>
