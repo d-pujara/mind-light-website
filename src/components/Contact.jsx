@@ -2,31 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
-const Counter = ({ target }) => {
-    const [count, setCount] = useState(0);
 
-    useEffect(() => {
-        let start = 0;
-        const duration = 2000;
-        const increment = target / (duration / 16);
-
-        if (target === 0) return; // Don't animate if 0
-
-        const timer = setInterval(() => {
-            start += increment;
-            if (start >= target) {
-                setCount(target);
-                clearInterval(timer);
-            } else {
-                setCount(Math.floor(start));
-            }
-        }, 16);
-
-        return () => clearInterval(timer);
-    }, [target]);
-
-    return count.toLocaleString();
-};
 
 const Contact = () => {
     return (
@@ -36,22 +12,7 @@ const Contact = () => {
             <div style={{ maxWidth: '800px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
                 <h1 style={{ fontSize: '3rem', marginBottom: '1rem', fontFamily: 'serif' }}>Ready to tell your story and raise more donations?</h1>
 
-                {/* Impact Counter Section */}
-                <div style={{ marginBottom: '3rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 'normal', color: '#666' }}>
-                        <span style={{
-                            fontSize: '2.5rem',
-                            fontWeight: 'bold',
-                            color: '#1a1a1a',
-                            display: 'inline-block',
-                            minWidth: '120px'
-                        }}>
-                            {/* Animated Counter Component placeholders */}
-                            $<Counter target={0} />
-                        </span>
-                        {' '}raised so far for these organizations (and counting)
-                    </h2>
-                </div>
+
 
                 {/* Animated Down Arrow */}
                 <div style={{ marginBottom: '3rem', animation: 'bounce 2s infinite' }}>
