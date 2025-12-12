@@ -16,8 +16,34 @@ const VideoPlayer = ({ videoUrl, logoUrl, posterUrl }) => {
 
     const youtubeId = getYoutubeId(videoUrl);
 
-    // Handling Play Logic
-    const togglePlay = () => {
+    // 0. No Video URL Case
+    if (!videoUrl) {
+        return (
+            <div
+                className="video-player-container"
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '16/9',
+                    backgroundColor: '#1a1a1a', // Lighter grey to show it exists
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                }}
+            >
+                {logoUrl && <img src={logoUrl} alt="Logo" style={{ width: '80px', opacity: 0.5, filter: 'grayscale(100%)' }} />}
+                <p style={{ color: '#666', fontStyle: 'italic' }}>No video available yet</p>
+            </div>
+        );
+    }
+
+    // 1. YouTube Player
+    if (youtubeId) {
         if (youtubeId) {
             setIsPlaying(true); // Switch to Iframe
         } else if (videoRef.current) {
