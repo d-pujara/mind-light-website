@@ -42,8 +42,8 @@ const VideoPlayer = ({ videoUrl, logoUrl, posterUrl }) => {
         );
     }
 
-    // 1. YouTube Player
-    if (youtubeId) {
+    // Handling Play Logic
+    const togglePlay = () => {
         if (youtubeId) {
             setIsPlaying(true); // Switch to Iframe
         } else if (videoRef.current) {
