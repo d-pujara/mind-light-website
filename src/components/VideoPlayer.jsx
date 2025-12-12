@@ -6,6 +6,51 @@ const VideoPlayer = ({ videoUrl, logoUrl, posterUrl }) => {
     const [isHovered, setIsHovered] = useState(false);
     const videoRef = useRef(null);
 
+    // Helper to extract YouTube ID
+    const getYoutubeId = (url) => {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    };
+
+    const youtubeId = getYoutubeId(videoUrl);
+
+    // 1. YouTube Player
+    if (youtubeId) {
+        return (
+            <div
+                className="video-player-container"
+                style={{
+                    position: 'relative',
+                    width: '100%',
+                    paddingBottom: '56.25%', // 16:9 Aspect Ratio
+                    height: 0,
+                    backgroundColor: '#000',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+                }}
+            >
+                <iframe
+                    src={`https://www.youtube.com/embed/${youtubeId}?autoplay=0&rel=0&modestbranding=1`}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%'
+                    }}
+                />
+            </div>
+        );
+    }
+
+    // 2. Direct File Player (Fallback / Original)
     const togglePlay = () => {
         if (videoRef.current) {
             if (isPlaying) {
@@ -44,7 +89,7 @@ const VideoPlayer = ({ videoUrl, logoUrl, posterUrl }) => {
                 onClick={togglePlay}
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
-                controls={false} // Custom controls
+                controls={false}
                 playsInline
             />
 
@@ -67,7 +112,7 @@ const VideoPlayer = ({ videoUrl, logoUrl, posterUrl }) => {
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            pointerEvents: 'none' // Allow clicks to pass through to video
+                            pointerEvents: 'none'
                         }}
                     >
                         {logoUrl && (
@@ -101,7 +146,7 @@ const VideoPlayer = ({ videoUrl, logoUrl, posterUrl }) => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     border: '1px solid rgba(255,255,255,0.4)',
-                                    pointerEvents: 'auto', // Enable clicking the play button
+                                    pointerEvents: 'auto',
                                     cursor: 'pointer'
                                 }}
                                 onClick={(e) => {
@@ -155,11 +200,6 @@ const VideoPlayer = ({ videoUrl, logoUrl, posterUrl }) => {
                         >
                             {isPlaying ? 'PAUSE' : 'PLAY'}
                         </button>
-
-                        {/* Progress bar could go here */}
-                        <div style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.3)', borderRadius: '2px' }}>
-                            <div style={{ width: '0%', height: '100%', background: 'white', borderRadius: '2px' }} />
-                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

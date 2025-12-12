@@ -307,6 +307,7 @@ const MapView = ({ nonprofits = [] }) => {
                             border: 4px solid ${color}; /* Color Coded Border */
                             background: white;
                             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                            cursor: pointer;
                         ">
                             <img src="${np.logoUrl}" style="
                                 width: 85%; 
