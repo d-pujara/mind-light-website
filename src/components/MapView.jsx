@@ -488,21 +488,6 @@ const MapView = ({ nonprofits = [] }) => {
                 )}
             </AnimatePresence>
 
-            {/* Side Info Panel With Filter */}
-            <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1, duration: 0.8 }}
-                className="map-sidebar"
-            >
-                <div>
-                    <h2>A Home for Nonprofits</h2>
-                    <p>
-                        Welcome to our constellation of community heroes. Each icon on this map represents a nonprofit whose story we’ve had the privilege to tell. Click to watch their films, discover their missions, and see how you can help keep their lights burning bright.
-                    </p>
-                </div>
-            </motion.div>
-
             {/* Admin Link */}
             <div
                 onClick={() => navigate('/admin')}
@@ -539,34 +524,6 @@ const MapView = ({ nonprofits = [] }) => {
             </div>
 
             <style jsx>{`
-                .map-sidebar {
-                    position: fixed;
-                    top: 8rem;
-                    left: 3rem;
-                    width: clamp(260px, 20vw, 320px);
-                    z-index: 1000;
-                    pointer-events: auto;
-                }
-                .map-sidebar > div {
-                    background: #D4C5A9;
-                    padding: clamp(1.5rem, 2vw, 2.5rem);
-                    border-radius: 16px;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                }
-                .map-sidebar h2 {
-                    margin: 0 0 1rem 0;
-                    font-family: "Georgia", serif;
-                    font-size: clamp(1.5rem, 2.5vw, 2rem);
-                    line-height: 1.1;
-                    color: #4E3629;
-                }
-                .map-sidebar p {
-                    margin: 0;
-                    font-size: clamp(0.9rem, 1vw, 1.1rem);
-                    line-height: 1.6;
-                    color: #4E3629;
-                }
-
                 .map-legend {
                     position: fixed;
                     top: 50%;
@@ -615,17 +572,12 @@ const MapView = ({ nonprofits = [] }) => {
 
                 /* Laptop / Small Desktop Tweaks */
                 @media (max-width: 1400px) {
-                    .map-sidebar {
-                        top: 7rem;
-                        left: 2rem;
-                    }
                     .map-legend {
                         right: 1.5rem; /* Pull in slightly */
                     }
                 }
                 @media (max-width: 1024px) {
                      /* Tablet styling handled by isMobile usually, but ensures clean degradation */
-                     .map-sidebar { display: none; } /* Hide sidebar on tablets to show map? Or make smaller */
                      .map-legend { display: none; } /* Mobile/Tablet has drawer */
                 }
             `}</style>
