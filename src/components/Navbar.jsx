@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false); // Mobile Menu State
+    const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
     const isMapPage = location.pathname === '/';
 
@@ -23,13 +23,38 @@ const Navbar = () => {
         setMenuOpen(false);
     }, [location]);
 
-    // Solid background if not on map page, or if scrolled (or if menu is open!)
     const navbarClass = `navbar ${scrolled || !isMapPage ? 'scrolled' : ''}`;
 
-    // Mobile Menu Animation Variants
-    const menuVariants = {
-        closed: { opacity: 0, x: '100%' },
-        open: { opacity: 1, x: 0 }
+    // Item Hover Component
+    const MenuItem = ({ to, children, onClick }) => {
+        const [isHovered, setIsHovered] = useState(false);
+
+        return (
+            <motion.li
+                onHoverStart={() => setIsHovered(true)}
+                onHoverEnd={() => setIsHovered(false)}
+                style={{ width: '100%', textAlign: 'center' }}
+            >
+                <Link
+                    to={to}
+                    onClick={onClick}
+                    style={{
+                        display: 'block',
+                        padding: '1rem 2rem',
+                        color: isHovered ? 'white' : '#4E3629',
+                        backgroundColor: isHovered ? '#4E3629' : 'transparent',
+                        textDecoration: 'none',
+                        fontSize: '1.5rem',
+                        fontFamily: '"Georgia", serif',
+                        fontWeight: 'bold',
+                        transition: 'all 0.3s ease',
+                        borderRadius: '0px' // Clean blocks
+                    }}
+                >
+                    {children}
+                </Link>
+            </motion.li>
+        );
     };
 
     return (
@@ -38,13 +63,13 @@ const Navbar = () => {
             top: 0,
             left: 0,
             width: '100%',
-            padding: '1rem 2rem', // Reduced padding slightly for better mobile fit
+            padding: '1rem 2rem',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             zIndex: 9000,
             transition: 'all 0.3s',
-            background: (scrolled || !isMapPage || menuOpen) ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
+            background: (scrolled || !isMapPage || menuOpen) ? 'rgba(255, 255, 255, 0.98)' : 'transparent',
             backdropFilter: (scrolled || !isMapPage || menuOpen) ? 'blur(10px)' : 'none',
             boxShadow: (scrolled || !isMapPage) ? '0 2px 20px rgba(0,0,0,0.05)' : 'none'
         }}>
@@ -55,56 +80,17 @@ const Navbar = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
-                pointerEvents: 'auto',
-                cursor: 'pointer',
-                zIndex: 9002 // Above menu overlay
+                zIndex: 9002,
+                cursor: 'pointer'
             }}>
                 <img src="/transparent_logo.png" alt="Mind Light Films" style={{ height: '40px', width: 'auto' }} />
             </Link>
 
-            {/* Desktop Links - Hidden on Mobile via CSS */}
-            <ul className="nav-links" style={{
-                display: 'flex',
-                gap: '2rem',
-                listStyle: 'none',
-                alignItems: 'center',
-                margin: 0,
-                fontFamily: '"Georgia", "Times New Roman", serif',
-                fontWeight: 'bold'
-                // pointerEvents handled by CSS (hidden on mobile)
-            }}>
-                <li><Link to="/work" style={{ color: '#4E3629', textDecoration: 'none' }}>Selected Works</Link></li>
-                <li><Link to="/reviews" style={{ color: '#4E3629', textDecoration: 'none' }}>Client Reviews</Link></li>
-                <li><Link to="/about" style={{ color: '#4E3629', textDecoration: 'none' }}>About Us</Link></li>
-                <li><Link to="/why-video" style={{ color: '#4E3629', textDecoration: 'none' }}>Services</Link></li>
-                <li>
-                    <Link to="/narrative-work" style={{ color: '#4E3629', textDecoration: 'none' }}>
-                        Narrative Work
-                    </Link>
-                </li>
-                <li>
-                    <Link to="/work-with-us" style={{
-                        textDecoration: 'none',
-                        color: 'white',
-                        backgroundColor: '#4E3629',
-                        padding: '0.8rem 1.5rem',
-                        borderRadius: '30px',
-                        fontSize: '1rem',
-                        transition: 'transform 0.2s',
-                        display: 'inline-block'
-                    }}>
-                        Work With Us &rarr;
-                    </Link>
-                </li>
-            </ul>
-
-            {/* Hamburger Button - Visible only on Mobile (Logic handled here or CSS) */}
-            {/* Simplest: Always render, hide on Desktop via CSS */}
+            {/* Hamburger Button (Always Visible) */}
             <div
-                className="hamburger-menu"
                 onClick={() => setMenuOpen(!menuOpen)}
                 style={{
-                    display: 'none', // Hidden by default, shown in mobile media query
+                    display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-around',
                     width: '2rem',
@@ -113,82 +99,81 @@ const Navbar = () => {
                     border: 'none',
                     cursor: 'pointer',
                     padding: 0,
-                    zIndex: 9002, // Above overlay
-                    pointerEvents: 'auto'
+                    zIndex: 9002
                 }}
             >
-                <div style={{ width: '2rem', height: '0.25rem', background: '#4E3629', borderRadius: '10px', transition: 'all 0.3s', transform: menuOpen ? 'rotate(45deg) translate(5px, 6px)' : 'rotate(0)' }} />
-                <div style={{ width: '2rem', height: '0.25rem', background: '#4E3629', borderRadius: '10px', transition: 'all 0.3s', opacity: menuOpen ? 0 : 1 }} />
-                <div style={{ width: '2rem', height: '0.25rem', background: '#4E3629', borderRadius: '10px', transition: 'all 0.3s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -6px)' : 'rotate(0)' }} />
+                <motion.div
+                    animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                    style={{ width: '2rem', height: '0.25rem', background: '#4E3629', borderRadius: '10px' }}
+                />
+                <motion.div
+                    animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+                    style={{ width: '2rem', height: '0.25rem', background: '#4E3629', borderRadius: '10px' }}
+                />
+                <motion.div
+                    animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+                    style={{ width: '2rem', height: '0.25rem', background: '#4E3629', borderRadius: '10px' }}
+                />
             </div>
 
-            {/* Mobile Menu Overlay */}
+            {/* Slide-out Menu */}
             <AnimatePresence>
                 {menuOpen && (
                     <motion.div
-                        initial="closed"
-                        animate="open"
-                        exit="closed"
-                        variants={menuVariants}
-                        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ type: 'spring', stiffness: 200, damping: 25 }}
                         style={{
-                            position: 'fixed',
-                            top: 0,
+                            position: 'absolute',
+                            top: '100%', // Position exactly underneath the navbar
                             left: 0,
                             width: '100%',
-                            height: '100vh',
-                            background: '#f5f5f5', // Match body bg
+                            background: '#fcfcfc',
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
                             zIndex: 9001,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '2rem'
+                            overflow: 'hidden',
+                            borderTop: '1px solid rgba(0,0,0,0.05)'
                         }}
                     >
                         <ul style={{
                             listStyle: 'none',
-                            padding: 0,
-                            textAlign: 'center',
+                            padding: '2rem 0',
+                            margin: 0,
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '2rem',
-                            fontFamily: '"Georgia", serif',
-                            fontSize: '1.5rem',
-                            fontWeight: 'bold'
+                            alignItems: 'center',
+                            gap: '0.5rem'
                         }}>
-                            <li><Link to="/" onClick={() => setMenuOpen(false)} style={{ color: '#4E3629', textDecoration: 'none' }}>Home</Link></li>
-                            <li><Link to="/work" onClick={() => setMenuOpen(false)} style={{ color: '#4E3629', textDecoration: 'none' }}>Selected Works</Link></li>
-                            <li><Link to="/reviews" onClick={() => setMenuOpen(false)} style={{ color: '#4E3629', textDecoration: 'none' }}>Client Reviews</Link></li>
-                            <li><Link to="/about" onClick={() => setMenuOpen(false)} style={{ color: '#4E3629', textDecoration: 'none' }}>About Us</Link></li>
-                            <li><Link to="/why-video" onClick={() => setMenuOpen(false)} style={{ color: '#4E3629', textDecoration: 'none' }}>Services</Link></li>
-                            <li><Link to="/narrative-work" onClick={() => setMenuOpen(false)} style={{ color: '#4E3629', textDecoration: 'none' }}>Narrative Work</Link></li>
-                            <li style={{ marginTop: '1rem' }}>
+                            <MenuItem to="/" onClick={() => setMenuOpen(false)}>Home</MenuItem>
+                            <MenuItem to="/work" onClick={() => setMenuOpen(false)}>Selected Works</MenuItem>
+                            <MenuItem to="/reviews" onClick={() => setMenuOpen(false)}>Client Reviews</MenuItem>
+                            <MenuItem to="/about" onClick={() => setMenuOpen(false)}>About Us</MenuItem>
+                            <MenuItem to="/why-video" onClick={() => setMenuOpen(false)}>Services</MenuItem>
+                            <MenuItem to="/narrative-work" onClick={() => setMenuOpen(false)}>Narrative Work</MenuItem>
+
+                            <motion.li
+                                whileHover={{ scale: 1.05 }}
+                                style={{ marginTop: '1rem' }}
+                            >
                                 <Link to="/work-with-us" onClick={() => setMenuOpen(false)} style={{
                                     textDecoration: 'none',
                                     color: 'white',
                                     backgroundColor: '#4E3629',
-                                    padding: '1rem 2rem',
+                                    padding: '1rem 2.5rem',
                                     borderRadius: '50px',
                                     fontSize: '1.2rem',
-                                    display: 'inline-block'
+                                    fontWeight: 'bold',
+                                    display: 'inline-block',
+                                    fontFamily: '"Georgia", serif',
                                 }}>
                                     Work With Us
                                 </Link>
-                            </li>
+                            </motion.li>
                         </ul>
                     </motion.div>
                 )}
             </AnimatePresence>
-
-            {/* Inject CSS for hamburger */}
-            <style>{`
-                @media (max-width: 768px) {
-                    .hamburger-menu {
-                        display: flex !important;
-                    }
-                }
-            `}</style>
         </nav>
     );
 };
