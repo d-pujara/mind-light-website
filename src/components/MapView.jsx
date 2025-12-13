@@ -227,13 +227,7 @@ const MapView = ({ nonprofits = [] }) => {
     // Scale card slightly with zoom
     const cardScale = Math.min(1.2, 1 + (zoom - 11) * 0.1);
 
-    // Filter Logic
-    const filteredNonprofits = selectedCategories.includes("All")
-        ? nonprofits
-        : nonprofits.filter(np => selectedCategories.includes(np.category));
 
-    // Get Unique Categories including 'All'
-    const categories = ["All", ...new Set(nonprofits.map(np => np.category))];
 
     // Toggle Category Logic
     const toggleCategory = (category) => {
