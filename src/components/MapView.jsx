@@ -254,10 +254,14 @@ const MapView = ({ nonprofits = [] }) => {
     // Filter Logic (Applied AFTER dispersion to keep positions stable)
     const filteredNonprofits = selectedCategories.includes("All")
         ? dispersedNonprofits
-        : dispersedNonprofits.filter(np => selectedCategories.includes(np.category));
+        : dispersedNonprofits.filter(np => {
+            // Support multiple categories per client (comma separated)
+            const clientCategories = (np.category || "").split(',').map(c => c.trim());
+            return clientCategories.some(c => selectedCategories.includes(c));
+        });
 
     // Get Unique Categories including 'All'
-    const categories = ["All", ...new Set(nonprofits.map(np => np.category))];
+    const categories = ["All", ...new Set(nonprofits.flatMap(np => (np.category || "").split(',').map(c => c.trim())))];
 
     return (
         <div className="map-container" style={{ width: '100%', height: '100vh', position: 'relative' }}>
@@ -285,7 +289,11 @@ const MapView = ({ nonprofits = [] }) => {
                 {filteredNonprofits && filteredNonprofits.map((np) => {
                     if (!np || !np.coordinates) return null;
 
-                    const color = CATEGORY_COLORS[np.category] || CATEGORY_COLORS["default"];
+                    // Support multiple categories color picking (Validation)
+                    const clientCATS = (np.category || "").split(',').map(c => c.trim());
+                    // Find first valid color or default
+                    const primaryCategory = clientCATS.find(c => CATEGORY_COLORS[c]) || "default";
+                    const color = CATEGORY_COLORS[primaryCategory] || CATEGORY_COLORS["default"];
 
                     const customIcon = L.divIcon({
                         className: 'custom-marker',
