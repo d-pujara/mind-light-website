@@ -58,7 +58,6 @@ const Navbar = () => {
     };
 
     return (
-    return (
         <nav className={navbarClass} style={{
             position: 'fixed',
             top: 0,
@@ -135,9 +134,10 @@ const Navbar = () => {
                             width: '100%',
                             background: '#fcfcfc',
                             boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                            zIndex: 9001,
+                            zIndex: 20001,
                             overflow: 'hidden',
-                            borderTop: '1px solid rgba(0,0,0,0.05)'
+                            borderTop: '1px solid rgba(0,0,0,0.05)',
+                            pointerEvents: 'auto' // Re-enable clicks for the menu itself
                         }}
                     >
                         <ul style={{
