@@ -58,6 +58,7 @@ const Navbar = () => {
     };
 
     return (
+    return (
         <nav className={navbarClass} style={{
             position: 'fixed',
             top: 0,
@@ -67,11 +68,12 @@ const Navbar = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            zIndex: 9000,
+            zIndex: 20000,
             transition: 'all 0.3s',
             background: (scrolled || !isMapPage || menuOpen) ? 'rgba(255, 255, 255, 0.98)' : 'transparent',
             backdropFilter: (scrolled || !isMapPage || menuOpen) ? 'blur(10px)' : 'none',
-            boxShadow: (scrolled || !isMapPage) ? '0 2px 20px rgba(0,0,0,0.05)' : 'none'
+            boxShadow: (scrolled || !isMapPage) ? '0 2px 20px rgba(0,0,0,0.05)' : 'none',
+            pointerEvents: 'none' // Let clicks pass through transparent areas
         }}>
             {/* Logo */}
             <Link to="/" style={{
@@ -80,8 +82,9 @@ const Navbar = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
-                zIndex: 9002,
-                cursor: 'pointer'
+                zIndex: 20002,
+                cursor: 'pointer',
+                pointerEvents: 'auto' // Re-enable pointer events for logo
             }}>
                 <img src="/transparent_logo.png" alt="Mind Light Films" style={{ height: '40px', width: 'auto' }} />
             </Link>
@@ -99,7 +102,8 @@ const Navbar = () => {
                     border: 'none',
                     cursor: 'pointer',
                     padding: 0,
-                    zIndex: 9002
+                    zIndex: 20002,
+                    pointerEvents: 'auto' // Re-enable pointer events for hamburger
                 }}
             >
                 <motion.div
